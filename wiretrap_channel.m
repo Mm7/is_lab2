@@ -1,6 +1,6 @@
 function [y,z] = wiretrap_channel(x)
     % Ensure `x` is a valid codeword.
-    assert(bitand(x(1), bitcmp(0x7f, "uint8")) == 0);
+    %assert(bitand(x, [0,0,0,0,0,0,0]) == 0);
 
     %Ty|x (8  possibilities)
     y_pos=[0,0,0,0,0,0,0;0,0,0,0,0,0,1;0,0,0,0,0,1,0;0,0,0,0,1,0,0;0,0,0,1,0,0,0;0,0,1,0,0,0,0;0,1,0,0,0,0,0;1,0,0,0,0,0,0];

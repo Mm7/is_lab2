@@ -1,20 +1,22 @@
 %% TASK 1
 
 x(1:7)=uint8(input('insert the input message (in vector):'));
+x = de2bi(x(1),7,'left-msb');
 [y,z] = wiretrap_channel(x);
-
 disp(['x: (input message)']);
 disp([x]);
 disp(['y: (legitimate channel)']);
+%y=uint8(bin2dec(sprintf('%d',y)));
 disp([y]);
 disp(['z:(eavesdropper channel)']);
+%z=uint8(bin2dec(sprintf('%d',z)));
 disp([z]);
       
 %% Verification of the conditional independence and uniformity   
 l_y=0;
 l_z=0;
 l=0;
-n=10^5;
+n=10^7;
 x=[1,0,0,1,0,0,0];
 for i=1:n
     [y,z] = wiretrap_channel(x);
