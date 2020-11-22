@@ -29,7 +29,7 @@ grid on;
 xlim([0, 128]);
 ylim([0, 1.8]);
 ylabel("Probability [%]");
-xlabel("Codeword [z]");
+xlabel("Word [z]");
 legend(["0b000","0b001","0b010","0b011","0b100","0b101","0b110","0b111"]);
 
 %% Compute some PMDs and I(u, z).
