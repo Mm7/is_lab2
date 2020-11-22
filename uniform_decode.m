@@ -1,7 +1,7 @@
 % Decode a word `x` using an uniform binning decoder.
 function u = uniform_decode(x)
     % The word must be a 7-bit word.
-    assert(bitand(x, bitcmp(0x7f)) == 0);
+    assert(bitand(x, bitcmp(0x7f, "uint8")) == 0);
     
     % Decode the word.
     u = hamming_decode(x);
