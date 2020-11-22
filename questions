@@ -1,0 +1,35 @@
+1. A single channel use can transmit 3 secret bit. Since for each
+channel use we send a Hamming codeword, i.e. a 7-bit word, we can
+send 3/7 ~= 0.43 secret bit per transmitted bit.
+
+2. No, it is not possible. In that case the size of the message
+space would be 2^4=16, the size of the information word (aka the
+input of the Hamming encoder) remains the same, i.e. 16 (the code
+is (7,4), meaning 4-bit information word), so in order to guarantee
+perfect reliability each message u must be mapped to a single
+codeword, i.e. | T_x|y | = 1.
+
+Unfortunately the eavesdropper channel can introduce up to 3 errors
+meaning that `x` can be mapped only to 64 different values, i.e.
+| T_z|x | = 64. This means that the hyphotesis of the "perfect secrecy"
+theorem and not satisfied anymore (64 = X_d->c != N = 128).
+
+In particular the eavesdropper by listening to `x` could restrict the
+possible messages from 16 (the all set) to 8 (half set).
+
+3. Yes, it is possible. We can simply reuse the 3-bit encoder/decoder
+and set one bit at random. Trivially this does not affect secrecy.
+
+4. By the perfect secrecy and the features of the channel we know that
+`z` is uniform and independent from `u`. Unfortunately this doesn't
+mean that the recovered message (let's call that ue) is uniform too.
+This is because the Hamming decoder in case of 2-bit errors has no
+way to determine which codeword is the most likely one (there are 2
+codewords at the same distance) but it still must pick one word, which
+one depends on the implementation. This implies that the distribution
+of `ue` will be slightly biased towards some words, rendering the
+error probability not trivial to compute (and probably not 7/8 as
+expected from an uniform `ue`).
+
+On the other hand, by testing the mutual information we can bypass
+entirely the Hamming decoder, making the result easily interpretable.
