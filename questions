@@ -22,16 +22,11 @@ possible messages from 16 (entire M set) to 8 (half set).
 and set one bit randomly(always the same bit). Trivially this does
 not affect secrecy.
 
-4. By the perfect secrecy and the features of the channel we know that
-`z` is uniform and independent from `u`. Unfortunately this doesn't
-mean that the recovered message (let's call that `ue`) is uniform too.
-This is because the Hamming decoder in case of 2-bit errors has no
-way to determine which codeword is the most likely one (there are 2
-codewords at the same distance) but it still must pick one word, which
-one depends on the implementation. This implies that the distribution
-of `ue` will be slightly biased towards some words, rendering the
-error probability not trivial to compute (and probably not 7/8 as
-expected from an uniform `ue`).
+4. If the channel were correctly implemented we would expect to see
+an error probability at least as high as random guessing, i.e. 87.5%
+for each possible decoder. Since there are many way decode the words,
+that test is prohibitive.
 
-On the other hand, by testing the mutual information we can bypass
-entirely the Hamming decoder, making the result easily interpretable.
+On the other hand by checking the mutual information we can easily
+verify that no information is leaking to the eavesdropper, regardless
+of the decoder.
