@@ -6,10 +6,7 @@ p_z_u = zeros(8, 128);
 % # of samples to generate to estimate a probability value.
 COUNT = 10000;
 
-for u = 0:7
-    % Frequencies for z values.
-    freq_z = containers.Map('KeyType', 'uint32', 'ValueType', 'uint32');
-    
+for u = 0:7    
     % Simulation...
     for i = 1:COUNT
         z = eavesdropper(u);
