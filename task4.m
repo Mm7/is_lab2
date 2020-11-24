@@ -34,13 +34,24 @@ legend(["0b000","0b001","0b010","0b011","0b100","0b101","0b110","0b111"]);
 
 %% Compute some PMDs and I(u, z).
 
-% TODO -> According to the slides `p_u` should be computed somehow, I'm
-%         not really sure how because I suppose it should be an input.
-%         For now let's just hardcode an uniform distribution :/
-p_u = ones(8, 1) * (1/8);
-p_uz = p_z_u .* (ones(8, 128) * (1/8));
+% Run a simulation to gather the joint distribution of u and v.
+cnt = 10000;
+p_uz = zeros(8, 128);
+
+for i = 1:cnt
+    u = randi(8)-1;
+    z = eavesdropper(u);
+    
+    p_uz(u+1, z+1) = p_uz(u+1, z+1) + 1;
+end
+
+p_uz = p_uz / cnt;
+
+% Compute the marginals.
+p_u = sum(p_uz, 2);
 p_z = sum(p_uz, 1)';
 
+% Compute the mutual information.
 I_uz = 0;
 
 for u = 1:8

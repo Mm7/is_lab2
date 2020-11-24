@@ -168,29 +168,23 @@ end
 %   p_z:   P(z)
 %   I_uz:  I(u,z)
 function [p_z_u, p_uz, p_u, p_z, I_uz] = compute_probs(delta)
-    % p_z|u
-    p_z_u = zeros(8, 128);
+    % Gather the statistics on the joint distribution of u and z.
+    p_uz = zeros(8, 128);
+    cnt = 10000;
 
-    % # of samples to generate to estimate a probability value.
-    cnt = 4000;
-
-    for u = 0:7   
-        % Simulation...
-        for i = 1:cnt
-            z = eavesdropper(u, delta);
-            p_z_u(u+1, z+1) = p_z_u(u+1, z+1) + 1;
-        end
+    for i = 1:cnt
+        u = randi(8)-1;
+        z = eavesdropper(u, delta);
+        
+        p_uz(u+1, z+1) = p_uz(u+1, z+1) + 1;
     end
+    
+    p_uz = p_uz / cnt;
 
-    p_z_u = p_z_u / cnt;
-
-    % Compute some PMDs and I(u, z).
-    % TODO -> According to the slides `p_u` should be computed somehow, I'm
-    %         not really sure how because I suppose it should be an input.
-    %         For now let's just hardcode an uniform distribution :/
-    p_u = ones(8, 1) * (1/8);
-    p_uz = p_z_u .* (ones(8, 128) * (1/8));
+    % Compute some PMDs and I(u, z).    
+    p_u = sum(p_uz, 2);
     p_z = sum(p_uz, 1)';
+    p_z_u = p_uz ./ (p_u * ones(1,128));
 
     I_uz = 0;
 
