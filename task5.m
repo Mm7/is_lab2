@@ -9,7 +9,7 @@ for i = 1:5
     epsilon = rand();
     delta = rand();
     
-    % `p_y` is the empirical probability of bit-flip in `y` and `p_z` is
+    % `p_y` is the empirical probability of a bit-flip in `y` and `p_z` is
     % the same for `z`.
     p_y = 0;
     p_z = 0;
@@ -44,9 +44,9 @@ end
 
 fprintf(">>> Simulating some transmissions...\n");
 
-% Define the error probabilities for the channel.
-epsilon = 0.1;
-delta = 0.3;
+% Pick some random BSC parameters.
+epsilon = rand() / 2;
+delta = rand() / 2;
 
 fprintf("BSC parameters: epsilon: %.2f, delta: %.2f\n", epsilon, delta);
 

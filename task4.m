@@ -1,23 +1,23 @@
 %% Plot the PMD p_z|u
 
-% p_z|u
+% Use a (8,128) matrix to collect the statistics of the PMD: p_z|u.
 p_z_u = zeros(8, 128);
-
-% # of samples to generate to estimate a probability value.
-COUNT = 10000;
+cnt = 10000;
 
 for u = 0:7    
     % Simulation...
-    for i = 1:COUNT
+    for i = 1:cnt
         z = eavesdropper(u);
-        
         p_z_u(u+1, z+1) = p_z_u(u+1, z+1) + 1;
     end
 end
 
-p_z_u = p_z_u / COUNT;
+% Normalize to get a PMD.
+p_z_u = p_z_u / cnt;
 
-% Plot p_z|u.
+% Plot p_z|u. On the x axis there is the word `z`, on the y axis the
+% probability of that word. Finally there is a plot for each value of `u`
+% (8 in total).
 for i = 1:8
     plot(1:128, p_z_u(i,:) * 100);
     hold on;
@@ -33,6 +33,10 @@ xlabel("Word [z]");
 legend(["0b000","0b001","0b010","0b011","0b100","0b101","0b110","0b111"]);
 
 %% Compute some PMDs and I(u, z).
+
+% TODO -> According to the slides `p_u` should be computed somehow, I'm
+%         not really sure how because I suppose it should be an input.
+%         For now let's just hardcode an uniform distribution :/
 p_u = ones(8, 1) * (1/8);
 p_uz = p_z_u .* (ones(8, 128) * (1/8));
 p_z = sum(p_uz, 1)';

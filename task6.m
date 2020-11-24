@@ -60,9 +60,7 @@ for k = 1:4
     fprintf("\t3) Computing the e-security of the mechanism\n");
     
     e = e_security(epsilon, I_uz);
-    
-    fprintf("\t\tMax error probability: %.2f\n", p_max);
-    fprintf("\t\tHalf sqrt of I: %.2f\n", half_sq_I);
+
     fprintf("\t\tSecurity parameter upper bound: %.2f\n", e);
 end
 
@@ -187,6 +185,9 @@ function [p_z_u, p_uz, p_u, p_z, I_uz] = compute_probs(delta)
     p_z_u = p_z_u / cnt;
 
     % Compute some PMDs and I(u, z).
+    % TODO -> According to the slides `p_u` should be computed somehow, I'm
+    %         not really sure how because I suppose it should be an input.
+    %         For now let's just hardcode an uniform distribution :/
     p_u = ones(8, 1) * (1/8);
     p_uz = p_z_u .* (ones(8, 128) * (1/8));
     p_z = sum(p_uz, 1)';
@@ -211,12 +212,17 @@ function e = e_security(epsilon, I_uz)
     %   I(u,z) = mutual information between `u` and `z`.
     % An upper bound on the e-security of the mechanism is:
     %   p_max + sqrt(I(u,z))/2.
+    % TODO -> Is this bound really usable in this context?
 
+    % First, compute `p_max` by the means of a simulation.
     p_max = 0;
     cnt = 4000;
 
     for u = 0:6
-        % P(u = u_y | u) 
+        % Letting `u` the transmitted message and `u_y` the decoded message
+        % (called `u_recovered` above) by the legitimate receiver, `p`
+        % collects the statistics of:
+        %   P(u != u_y | u)
         p = 0;
         
         for i = 1:cnt
@@ -237,8 +243,7 @@ function e = e_security(epsilon, I_uz)
         % Take the maximum.
         p_max = max([p, p_max]);
     end
-    
-    % The mutual information on the other hand should be correct.
+
     half_sq_I = 0.5 * sqrt(I_uz);
     
     % Compute the `e` security parameter. If the upper bound is higher than
@@ -253,7 +258,7 @@ function entropy = entropy(v)
     entropy = sum(lg .* v, 'all');
 end
 
-% Chain the encoding + wiretrap channel.
+% Chain the encoding + BSC channel.
 function z = eavesdropper(u, delta)
     x = uniform_encode(u);
     [~,z] = bsc_channel(x, 0, delta);

@@ -1,7 +1,7 @@
 %% Test the uniform binning encoder.
 
 % Use the test provided in the slide. Run the test many times to ensure
-% that both the information word are hit.
+% that both the codewords are hit.
 for i = 1:20
     x = uniform_encode(0b100);
     assert(x == 0b100101 || x == 0b1011010);
@@ -28,6 +28,8 @@ X = [0b0000000
 for i = 1:20
     for j = 0:7
         x = uniform_encode(j);
+        
+        % Ensure that the output of the encoder is a valid codeword.
         assert(sum(X == x) == 1);
     end
 end
