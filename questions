@@ -1,6 +1,6 @@
-1. A single channel use can transmit 3 secret bit. Since for each
+1. A single channel use can transmit 3 secret bits. Since for each
 channel use we send a Hamming codeword, i.e. a 7-bit word, we can
-send 3/7 ~= 0.43 secret bit per transmitted bit.
+send 3/7 ~= 0.43 secret bits per transmitted bit.
 
 2. No, it is not possible. In that case the size of the message
 space would be 2^4=16, the size of the information word (aka the
