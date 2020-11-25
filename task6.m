@@ -1,3 +1,9 @@
+
+% Run in fast mode to generate all the plots quickly at the expense of a
+% lower granularity and accuracy.
+global fast;
+fast = true;
+
 %% Run some simulations for different pairs of epsilon and delta.
 
 % Pick some random epsilon and delta, for each of them do the following
@@ -35,7 +41,7 @@ for k = 1:4
     end
 
     title(sprintf("p_{z|u} - epsilon: %.2f delta: %.2f", epsilon, delta));
-    subtitle("Each line is a different message u");
+    subtitle("Each color corresponds to a different message u");
     grid on;
     xlim([0, 128]);
     ylabel("Probability [%]");
@@ -68,7 +74,8 @@ end
 
 fprintf(">>> Plot 2.3.4: decoding error probability vs epsilon\n");
 
-epsilon_vals = 0:0.05:0.5;
+granularity = 0.001 * max(fast * 10, 1);
+epsilon_vals = 0:granularity:0.5;
 prob_err = zeros(length(epsilon_vals), 1);
 
 for i = 1:length(epsilon_vals)
@@ -88,7 +95,8 @@ grid on;
 
 fprintf(">>> Plot 2.3.5: mutual information vs I(u,z)\n");
 
-delta_vals = 0:0.05:0.5;
+granularity = 0.001 * max(fast * 10, 1);
+delta_vals = 0:granularity:0.5;
 mut_inf = zeros(length(delta_vals), 1);
 
 for i = 1:length(delta_vals)
@@ -109,8 +117,9 @@ grid on;
 
 fprintf(">>> Plot 2.3.6: upper bound on the security of the mechanism vs (epsilon, delta)\n");
 
-epsilon_vals = 0:0.1:0.5;
-delta_vals = 0:0.1:0.5;
+granularity = 0.01 * max(fast * 10, 1);
+epsilon_vals = 0:granularity:0.5;
+delta_vals = 0:granularity:0.5;
 
 e_sec = zeros(length(epsilon_vals), length(delta_vals));
 
@@ -137,8 +146,9 @@ title("Upper bound on security parameter vs (epsilon, delta)");
 % Compute the decoding error probability over a BSC, given the epsilon
 % parameter.
 function p = decoding_err_prob(epsilon)
+    global fast;
     p = 0;
-    cnt = 10000;
+    cnt = 1000 * max(~fast * 10, 1);
 
     for i = 1:cnt
         % Generate a random message.
@@ -168,9 +178,11 @@ end
 %   p_z:   P(z)
 %   I_uz:  I(u,z)
 function [p_z_u, p_uz, p_u, p_z, I_uz] = compute_probs(delta)
+    global fast;
+    
     % Gather the statistics on the joint distribution of u and z.
     p_uz = zeros(8, 128);
-    cnt = 10000;
+    cnt = 1000 * max(~fast * 10, 1);
 
     for i = 1:cnt
         u = randi(8)-1;
@@ -200,17 +212,18 @@ end
 % Compute an upper bound on the security parameter of the mechanism given
 % the `epsilon` parameter of the BSC and the mutual information I(u,z).
 function e = e_security(epsilon, I_uz)
+    global fast;
+
     % Let:
     %   p_max = maximum (over d in M) of P(u != u_recovered | u = d )
     %           conditional decoding error probability.
     %   I(u,z) = mutual information between `u` and `z`.
     % An upper bound on the e-security of the mechanism is:
     %   p_max + sqrt(I(u,z))/2.
-    % TODO -> Is this bound really usable in this context?
 
     % First, compute `p_max` by the means of a simulation.
     p_max = 0;
-    cnt = 4000;
+    cnt = 1000 * max(~fast * 10, 1);
 
     for u = 0:6
         % Letting `u` the transmitted message and `u_y` the decoded message
